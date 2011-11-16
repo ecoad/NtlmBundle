@@ -1,0 +1,6 @@
+login:
+    pattern:   /login
+    defaults:  { _controller: BrowserCreativeNtlmBundle:Security:login }
+
+login_check:
+    pattern:   /login_check

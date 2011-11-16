@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="ntlm.security.authentication.provider.ntlmprotocol" 
+                 class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmProtocolAuthenticationProvider" 
+                 public="false">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="ntlm.security.authentication.listener.ntlmprotocol" 
+                 class="BrowserCreative\NtlmBundle\Security\Firewall\NtlmProtocolListener" 
+                 public="false">
+            <tag name="monolog.logger" channel="security" />
+            <argument type="service" id="security.context" />
+            <argument type="service" id="security.authentication.manager" />
+            <argument type="service" id="security.http_utils" />
+            <argument type="service" id="logger" on-invalid="null" />
+            <argument type="service" id="event_dispatcher" on-invalid="null"/>
+        </service>
+        
+        <service id="ntlm.security.authentication.provider.login" 
+                 class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmFormLoginAuthenticationProvider" 
+                 public="false">
+            <argument /> <!-- remember me parameter name -->
+            <argument type="service" id="service_container" />
+        </service>
+        
+        <service id="ntlm.security.http.logout" 
+                 class="BrowserCreative\NtlmBundle\Security\Http\Logout\NtlmLogoutHandler" 
+                 public="false">
+        </service>
+    </services>
+</container>
