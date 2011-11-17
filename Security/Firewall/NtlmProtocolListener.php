@@ -99,23 +99,17 @@ class NtlmProtocolListener implements ListenerInterface
             return;
         }
         
-        var_dump('protcze'); 
         try {
             // Authentication manager uses a list of AuthenticationProviderInterface instances 
             // to authenticate a Token.
-            var_dump('1');;
-            var_dump('1');;
             $token = $this->authenticationManager->authenticate(new NtlmProtocolToken());
-            var_dump('2');;
             $this->securityContext->setToken($token);
             
             # Notify listeners that the user has been logged in
-            var_dump('3');;
             if ($this->dispatcher) {
                 $this->dispatcher->dispatch(SecurityEvents::INTERACTIVE_LOGIN,
                     new InteractiveLoginEvent($event->getRequest(), $token));
             }
-            var_dump('4'); exit;
             
             if ($this->logger) {
                 $this->logger->debug(sprintf(

@@ -61,7 +61,7 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
     public function authenticate(TokenInterface $token)
     {
         try {
-            $user = $this->userProvider->loadUserByUsername($token->getUsername());
+            $user = $this->userProvider->loadUserByUsername($token);
             $this->checkAuthentication($user, $token);
 
             return new UsernamePasswordToken($user, $token->getCredentials(), 

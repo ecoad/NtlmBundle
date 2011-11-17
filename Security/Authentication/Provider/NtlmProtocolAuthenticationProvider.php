@@ -47,7 +47,8 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
      * @param ContainerInterface $container so we can get the request
      * @param UserProviderInterface $userProvider
      */
-    public function __construct(ContainerInterface $container, UserProviderInterface $userProvider) {
+    public function __construct(ContainerInterface $container, UserProviderInterface $userProvider)
+    {
         $this->container = $container;
         $this->userProvider = $userProvider;
     }
@@ -56,10 +57,18 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
     {
         $request = $this->container->get('request');
         if ($this->hasNtlmData($request)) {
-            $username = $this->getNtlmUser($request);
+
+            $username = $this->getNtlmUsername($request);
+            $token = new NtlmProtocolToken($username);
 
             try {
-                $user = $this->userProvider->loadUserByUsername($username);
+                /**
+                 * Token is passed to loadUserByUsername as we require the credentials for 
+                 * the LDAP provider. Unfortunately, we cannot use another function, as 
+                 * ChainUserProvider will fire off the same function which is out of our 
+                 * control.
+                 */
+                $user = $this->userProvider->loadUserByUsername($token); 
                 return new NtlmProtocolToken($user);
             } catch (UsernameNotFoundException $e) {
             }
@@ -84,7 +93,7 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
         return true;
     }
 
-    protected function getNtlmUser(Request $request) {
+    protected function getNtlmUsername(Request $request) {
         return $this->container->get('request')->get('ntlm');
     }
 }
