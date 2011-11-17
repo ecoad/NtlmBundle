@@ -37,12 +37,19 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
      * @var ContainerInterface
      */
     protected $container;
+    
+    /**
+     * @var UserProviderInterface
+     */
+    protected $userProvider;
 
     /**
      * @param ContainerInterface $container so we can get the request
+     * @param UserProviderInterface $userProvider
      */
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container, UserProviderInterface $userProvider) {
         $this->container = $container;
+        $this->userProvider = $userProvider;
     }
 
     public function authenticate(TokenInterface $token)
@@ -52,8 +59,7 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
             $username = $this->getNtlmUser($request);
 
             try {
-                $userProvider = $this->container->get('user.provider');
-                $user = $userProvider->loadUserByUsername($username);
+                $user = $this->userProvider->loadUserByUsername($username);
                 return new NtlmProtocolToken($user);
             } catch (UsernameNotFoundException $e) {
             }

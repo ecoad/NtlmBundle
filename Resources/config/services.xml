@@ -9,6 +9,7 @@
                  class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmProtocolAuthenticationProvider" 
                  public="false">
             <argument type="service" id="service_container" />
+            <argument /> <!-- user provider -->
         </service>
 
         <service id="ntlm.security.authentication.listener.ntlmprotocol" 
@@ -27,6 +28,7 @@
                  public="false">
             <argument /> <!-- remember me parameter name -->
             <argument type="service" id="service_container" />
+            <argument /> <!-- user provider -->
         </service>
         
         <service id="ntlm.security.http.logout" 

@@ -9,11 +9,13 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityF
 
 class NtlmProtocolFactory implements SecurityFactoryInterface
 {
-    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
+    public function create(ContainerBuilder $container, $id, $config, $userProviderId, $defaultEntryPoint)
     {
         $providerId = 'ntlm.security.authentication.provider.ntlmprotocol.' . $id;
-        $container->setDefinition($providerId,
-            new DefinitionDecorator('ntlm.security.authentication.provider.ntlmprotocol'));
+        $container
+            ->setDefinition($providerId,
+                new DefinitionDecorator('ntlm.security.authentication.provider.ntlmprotocol'))
+                ->replaceArgument(1, new Reference($userProviderId));
 
         $listenerId = 'ntlm.security.authentication.listener.ntlmprotocol.' . $id;
         $container->setDefinition($listenerId,
@@ -53,6 +55,7 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
         $node
             ->children()
                 ->booleanNode('redirect_to_login_form_on_failure')->defaultValue(true)->end()
+                ->scalarNode('provider')->end()
             ->end()
         ;
     }

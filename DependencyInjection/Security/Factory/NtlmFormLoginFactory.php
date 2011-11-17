@@ -14,7 +14,8 @@ class NtlmFormLoginFactory extends FormLoginFactory
         $providerId = 'ntlm.security.authentication.provider.login.' . $id;
         $container->setDefinition($providerId,
             new DefinitionDecorator('ntlm.security.authentication.provider.login'))
-            ->replaceArgument(0, $config['remember_me_parameter']);
+            ->replaceArgument(0, $config['remember_me_parameter'])
+            ->replaceArgument(2, new Reference($userProviderId));
 
         # If the application does logouts, add our handler to log the user out of Wordpress, too
         if ($container->hasDefinition('security.logout_listener.'.$id)) {

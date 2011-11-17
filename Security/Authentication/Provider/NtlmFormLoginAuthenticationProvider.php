@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use BrowserCreative\NtlmBundle\Security\User\User;
 
@@ -47,27 +48,27 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
      * @param string $rememberMeParameter the name of the request parameter to use to determine 
      *                                    whether to remember the user
      * @param ContainerInterface $container so we can get the request and check the remember-me param
+     * @param UserProviderInterface $userProvider
      */
-    public function __construct($rememberMeParameter = '_remember_me',
-        ContainerInterface $container = null)
+    public function __construct($rememberMeParameter = '_remember_me', ContainerInterface $container = null, 
+        UserProviderInterface $userProvider)
     {
-        
         $this->rememberMeParameter = $rememberMeParameter;
         $this->container = $container;
+        $this->userProvider = $userProvider;
     }
 
     public function authenticate(TokenInterface $token)
     {
-        $userProvider = $this->container->get('user.provider');
         try {
-            $user = $userProvider->loadUserByUsername($token->getUsername());
+            $user = $this->userProvider->loadUserByUsername($token->getUsername());
             $this->checkAuthentication($user, $token);
 
             return new UsernamePasswordToken($user, $token->getCredentials(), 
                 $token->getProviderKey(), $user->getRoles());
 
         } catch (UsernameNotFoundException $e) {
-
+            throw new BadCredentialsException('The supplied credentials are incorrect');
         }
 
         throw new AuthenticationException('Unable to authenticate');
