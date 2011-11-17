@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use BrowserCreative\NtlmBundle\Security\User\User;
+use BrowserCreative\NtlmBundle\Security\Authentication\Token\NtlmProtocolUsernamePasswordToken;
 
 /**
  * NtlmFormLoginAuthenticationProvider will authenticate the user with Wordpress
@@ -60,12 +61,17 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
 
     public function authenticate(TokenInterface $token)
     {
-        try {
-            $user = $this->userProvider->loadUserByUsername($token);
-            $this->checkAuthentication($user, $token);
+        $user = $this->container->get('user.entity');
+        $user->setUsername($token->getUsername());
+        $user->setPassword($token->getCredentials());
+        $ntlmToken = new NtlmProtocolUsernamePasswordToken($user, $token->getCredentials(), $token->getProviderKey());
 
-            return new UsernamePasswordToken($user, $token->getCredentials(), 
-                $token->getProviderKey(), $user->getRoles());
+        try {
+            $user = $this->userProvider->loadUserByUsername($ntlmToken);
+            $this->checkAuthentication($user, $ntlmToken);
+
+            return new NtlmProtocolUsernamePasswordToken($user, $ntlmToken->getCredentials(), 
+                $ntlmToken->getProviderKey(), $user->getRoles());
 
         } catch (UsernameNotFoundException $e) {
             throw new BadCredentialsException('The supplied credentials are incorrect');
@@ -74,7 +80,7 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
         throw new AuthenticationException('Unable to authenticate');
     }
 
-    protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
+    protected function checkAuthentication(UserInterface $user, NtlmProtocolUsernamePasswordToken $token)
     {
         $currentUser = $token->getUser();
         if ($currentUser instanceof UserInterface) {

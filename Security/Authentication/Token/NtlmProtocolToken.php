@@ -2,20 +2,29 @@
 namespace BrowserCreative\NtlmBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use BrowserCreative\NtlmBundle\Security\User\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class NtlmProtocolToken extends AbstractToken
 {
 
-    public function __construct(User $user = null) {
-        if ($user instanceof User) {
+    public function __construct(UserInterface $user = null) {
+        if ($user) {
             parent::__construct($user->getRoles());
             $this->setUser($user);
             parent::setAuthenticated(true);
-            
-        } else {
-            parent::__construct();
         }
+    }
+
+    public function __tostring() {
+        if ($this->getUser()) {
+            return (string)$this->getUser()->getUsername();
+        }
+
+        return '';
+    }
+
+    public function getCredentials() {
+        return $this->getUser()->getCredentials();
     }
 
     public function setAuthenticated($isAuthenticated)
@@ -26,10 +35,5 @@ class NtlmProtocolToken extends AbstractToken
         }
 
         parent::setAuthenticated(false);
-    }
-
-    public function getCredentials()
-    {
-        return '';
     }
 }

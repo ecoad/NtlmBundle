@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 use BrowserCreative\NtlmBundle\Security\Authentication\Token\NtlmProtocolToken;
-use BrowserCreative\NtlmBundle\Security\User\User;
 
 /**
  * NtlmProtocolAuthenticationProvider will verify that the current user has been authenticated
@@ -57,9 +56,9 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
     {
         $request = $this->container->get('request');
         if ($this->hasNtlmData($request)) {
-
-            $username = $this->getNtlmUsername($request);
-            $token = new NtlmProtocolToken($username);
+            $user = $this->container->get('user.entity');
+            $user->setUsername($this->getNtlmUsername($request));
+            $token->setUser($user);
 
             try {
                 /**
