@@ -34,27 +34,26 @@ Installation
 
 3. Update your security.yml:
 
-    security:
-        factories:
-            - "%kernel.root_dir%/../vendor/bundles/BrowserCreative/NtlmBundle/Resources/config/security_factories.xml"
+        security:
+            factories:
+                - "%kernel.root_dir%/../vendor/bundles/BrowserCreative/NtlmBundle/Resources/config/security_factories.xml"
 
-        providers:
+            providers:
+                ...
+
+            firewalls:
+                secured_area:
+                    pattern: ^/
+                    ntlm_protocol:
+                        provider: chain_provider
+                        redirect_to_login_form_on_failure: true
+                    ntlm_form_login:
+                        provider: chain_provider
+                        remember_me_parameter: _remember_me
+                    logout: ~
+                    anonymous: true
+            
             ...
-
-        firewalls:
-            secured_area:
-                pattern: ^/
-                ntlm_protocol:
-                    provider: chain_provider
-                    redirect_to_login_form_on_failure: true
-                ntlm_form_login:
-                    provider: chain_provider
-                    remember_me_parameter: _remember_me
-                logout: ~
-                anonymous: true
-        
-        ...
-
 
 Notes
 =====
