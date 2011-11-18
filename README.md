@@ -1,12 +1,9 @@
+This bundle is in development
+
 Requirements
 ============
 
 * Symfony 2.0.x
-
-Usage 
-=====
-
-(TODO)
 
 Installation
 ============
@@ -36,6 +33,33 @@ Installation
 
 
 3. Update your security.yml:
-(TODO)
+
+    security:
+        factories:
+            - "%kernel.root_dir%/../vendor/bundles/BrowserCreative/NtlmBundle/Resources/config/security_factories.xml"
+
+        providers:
+            ...
+
+        firewalls:
+            secured_area:
+                pattern: ^/
+                ntlm_protocol:
+                    provider: chain_provider
+                    redirect_to_login_form_on_failure: true
+                ntlm_form_login:
+                    provider: chain_provider
+                    remember_me_parameter: _remember_me
+                logout: ~
+                anonymous: true
+        
+        ...
+
+
+Notes
+=====
+* The two authentication providers (NtlmProtocolAuthenticationProvider, NtlmFormLoginAuthenticationProvider) pass 
+tokens to the user provider instead of the username. Feel free to change this back, it's just that our User Providers 
+require the tokens because they rely on the password to access the database (LDAP)
 
 
