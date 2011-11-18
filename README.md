@@ -1,5 +1,11 @@
 This bundle is in development
 
+Description
+===========
+This bundle sets up the NTLM authentication provider for your application. If there is NTLM data 
+provided by the browser, then the application will try and authenticate the provided username against 
+your user provider/chain user providers
+
 Requirements
 ============
 
