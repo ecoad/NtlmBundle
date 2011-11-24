@@ -1,18 +1,24 @@
-{% if error %}
-    <div>{{ error.message }}</div>
-{% endif %}
+{% extends "HubSiteBundle:Site:base.html.twig" %}
 
-<form action="{{ path('login_check') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+{% block pageTitle %}Login{% endblock %}
+{% block content %}
+    {% if error %}
+        <div>{{ error.message }}</div>
+    {% endif %}
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
+    <form action="{{ path('login_check') }}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
 
-    {#
-        If you want to control the URL the user is redirected to on success (more details below)
-        <input type="hidden" name="_target_path" value="/account" />
-    #}
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password" />
 
-    <input type="submit" name="login" />
-</form>
+        {#
+            If you want to control the URL the user is redirected to on success (more details below)
+            <input type="hidden" name="_target_path" value="/account" />
+        #}
+
+        <input type="submit" name="login" />
+    </form>
+{% endblock %}
+
