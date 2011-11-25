@@ -5,15 +5,16 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="ntlm.security.authentication.provider.ntlmprotocol" 
-                 class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmProtocolAuthenticationProvider" 
+        <service id="ntlm.security.authentication.provider.ntlmprotocol"
+                 class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmProtocolAuthenticationProvider"
                  public="false">
             <argument type="service" id="service_container" />
             <argument /> <!-- user provider -->
+            <argument /> <!-- trusted IP addresses -->
         </service>
 
-        <service id="ntlm.security.authentication.listener.ntlmprotocol" 
-                 class="BrowserCreative\NtlmBundle\Security\Firewall\NtlmProtocolListener" 
+        <service id="ntlm.security.authentication.listener.ntlmprotocol"
+                 class="BrowserCreative\NtlmBundle\Security\Firewall\NtlmProtocolListener"
                  public="false">
             <tag name="monolog.logger" channel="security" />
             <argument type="service" id="security.context" />
@@ -22,17 +23,16 @@
             <argument type="service" id="logger" on-invalid="null" />
             <argument type="service" id="event_dispatcher" on-invalid="null"/>
         </service>
-        
-        <service id="ntlm.security.authentication.provider.login" 
-                 class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmFormLoginAuthenticationProvider" 
+
+        <service id="ntlm.security.authentication.provider.login"
+                 class="BrowserCreative\NtlmBundle\Security\Authentication\Provider\NtlmFormLoginAuthenticationProvider"
                  public="false">
             <argument /> <!-- remember me parameter name -->
             <argument type="service" id="service_container" />
             <argument /> <!-- user provider -->
         </service>
-        
-        <service id="ntlm.security.http.logout" 
-                 class="BrowserCreative\NtlmBundle\Security\Http\Logout\NtlmLogoutHandler" 
+        <service id="ntlm.security.http.logout"
+                 class="BrowserCreative\NtlmBundle\Security\Http\Logout\NtlmLogoutHandler"
                  public="false">
         </service>
     </services>

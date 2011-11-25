@@ -27,5 +27,4 @@ class NtlmLogoutHandler implements LogoutHandlerInterface
     public function logout(Request $request, Response $response, TokenInterface $token)
     {
     }
-
 }

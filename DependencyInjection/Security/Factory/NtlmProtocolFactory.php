@@ -15,7 +15,8 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
         $container
             ->setDefinition($providerId,
                 new DefinitionDecorator('ntlm.security.authentication.provider.ntlmprotocol'))
-                ->replaceArgument(1, new Reference($userProviderId));
+                ->replaceArgument(1, new Reference($userProviderId))
+                ->replaceArgument(2, $config['trusted_remote_addresses']);
 
         $listenerId = 'ntlm.security.authentication.listener.ntlmprotocol.' . $id;
         $container->setDefinition($listenerId,
@@ -26,11 +27,11 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
         if ($container->hasDefinition('security.logout_listener.'.$id)) {
             $logoutListener = $container->getDefinition('security.logout_listener.'.$id);
             $addHandlerArguments = array(new Reference('ntlm.security.http.logout.' . $id));
-            
+
             # Don't add the handler again if it has already been added by another factory
             if (!in_array(array('addHandler', $addHandlerArguments),
                     $logoutListener->getMethodCalls())) {
-                
+
                 $container->setDefinition('ntlm.security.http.logout.' . $id,
                             new DefinitionDecorator('ntlm.security.http.logout'));
                 $logoutListener->addMethodCall('addHandler', $addHandlerArguments);
@@ -56,6 +57,9 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
             ->children()
                 ->booleanNode('redirect_to_login_form_on_failure')->defaultValue(true)->end()
                 ->scalarNode('provider')->end()
+                ->arrayNode('trusted_remote_addresses')
+                    ->useAttributeAsKey('key')
+                    ->prototype('scalar')->end()
             ->end()
         ;
     }
