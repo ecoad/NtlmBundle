@@ -63,7 +63,10 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
     {
         $user = $this->container->get('user.entity');
         $user->setUsername($token->getUsername());
-        $user->setPassword($token->getCredentials());
+
+        $userProvider = $this->container->get('user.provider');
+        $user->setPassword($userProvider->encryptPassword($token->getCredentials()));
+
         $ntlmToken = new NtlmProtocolUsernamePasswordToken($user, $token->getCredentials(), $token->getProviderKey());
 
         try {
@@ -86,8 +89,13 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
         $noPasswordMessage = 'The presented password cannot be empty.';
 
         $currentUser = $token->getUser();
+
+       // var_dump($user->getPassword());
+       // var_dump($currentUser->getPassword()); exit;
+
         if ($currentUser instanceof UserInterface) {
-            if ($currentUser->getPassword() !== $user->getDecryptedPassword($this->container->getParameter('secret'))) {
+            //if ($currentUser->getPassword() !== $user->getDecryptedPassword($this->container->getParameter('secret'))) {
+            if ($currentUser->getPassword() !== $user->getPassword()) {
                 throw new BadCredentialsException($invalidPasswordMessage);
             }
         } else {
@@ -95,7 +103,9 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
                 throw new BadCredentialsException($noPasswordMessage);
             }
 
-            if ($user->getDecryptedPassword($this->container->getParameter('secret')) !== $presentedPassword) {
+            $userProvider = $this->container->get('user.provider');
+
+            if ($userProvider->decryptPassword($user->getPassword()) !== $presentedPassword) {
                 throw new BadCredentialsException($invalidPasswordMessage);
             }
         }
