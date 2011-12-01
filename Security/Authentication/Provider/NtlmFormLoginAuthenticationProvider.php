@@ -36,7 +36,7 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
      * @var string
      */
     protected $rememberMeParameter;
-    
+
     /**
      *
      * @var ContainerInterface
@@ -46,12 +46,12 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
     /**
      * Constructor
      *
-     * @param string $rememberMeParameter the name of the request parameter to use to determine 
+     * @param string $rememberMeParameter the name of the request parameter to use to determine
      *                                    whether to remember the user
      * @param ContainerInterface $container so we can get the request and check the remember-me param
      * @param UserProviderInterface $userProvider
      */
-    public function __construct($rememberMeParameter = '_remember_me', ContainerInterface $container = null, 
+    public function __construct($rememberMeParameter = '_remember_me', ContainerInterface $container = null,
         UserProviderInterface $userProvider)
     {
         $this->rememberMeParameter = $rememberMeParameter;
@@ -70,7 +70,7 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
             $user = $this->userProvider->loadUserByUsername($ntlmToken);
             $this->checkAuthentication($user, $ntlmToken);
 
-            return new NtlmProtocolUsernamePasswordToken($user, $ntlmToken->getCredentials(), 
+            return new NtlmProtocolUsernamePasswordToken($user, $ntlmToken->getCredentials(),
                 $ntlmToken->getProviderKey(), $user->getRoles());
 
         } catch (UsernameNotFoundException $e) {
@@ -82,22 +82,25 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
 
     protected function checkAuthentication(UserInterface $user, NtlmProtocolUsernamePasswordToken $token)
     {
+        $invalidPasswordMessage = 'The presented password is invalid.';
+        $noPasswordMessage = 'The presented password cannot be empty.';
+
         $currentUser = $token->getUser();
         if ($currentUser instanceof UserInterface) {
-            if ($currentUser->getPassword() !== $user->getPassword()) {
-                throw new BadCredentialsException('The credentials were changed from another session.');
+            if ($currentUser->getPassword() !== $user->getDecryptedPassword($this->container->getParameter('secret'))) {
+                throw new BadCredentialsException($invalidPasswordMessage);
             }
         } else {
             if (!$presentedPassword = $token->getCredentials()) {
-                throw new BadCredentialsException('The presented password cannot be empty.');
+                throw new BadCredentialsException($noPasswordMessage);
             }
 
-            if ($user->getPassword() !== $presentedPassword) { //Use a password encoder for non plain text
-                throw new BadCredentialsException('The presented password is invalid.');
+            if ($user->getDecryptedPassword($this->container->getParameter('secret')) !== $presentedPassword) {
+                throw new BadCredentialsException($invalidPasswordMessage);
             }
         }
     }
-    
+
     /**
      * Checks whether the user requested to be remembered
      *
