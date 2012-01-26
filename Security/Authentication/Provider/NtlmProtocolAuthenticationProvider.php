@@ -54,9 +54,19 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
 
     public function authenticate(TokenInterface $token)
     {
+        $logger = $this->container->get('logger');
+
+        
+        $logger->info('Trying to authenticate NTLM Protocol provider');
 
         if (!$this->isRemoteAddressAuthorised($_SERVER['REMOTE_ADDR'])) {
-            throw new AuthenticationException('NTLM cannot authetnicate against unauthorised IP addresses');
+            throw new AuthenticationException('NTLM cannot authenticate against unauthorised IP addresses');
+        }
+
+        if ($this->isLoginFormBeingSubmitted()) {
+            $message = 'NTLM cannot be used in conjunction with form submits in login';
+            $logger->info($message);
+            throw new AuthenticationException($message);
         }
 
         $username = $this->checkNtlm();
@@ -74,8 +84,12 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
                  * control.
                  */
                 $user = $this->userProvider->loadUserByUsername($token);
+
+                $logger->info('User loaded: ' . $username);
+
                 return new NtlmProtocolToken($user);
             } catch (UsernameNotFoundException $e) {
+                $logger->info('Username not found: ' . $username);
             }
         }
 
@@ -86,17 +100,29 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
     {
         $ldapRequest = $this->container->get('ntlm.request');
 
-
-        $username = $ldapRequest->ntlm_prompt("testwebsite", "testdomain", "mycomputer", "testdomain.local", "mycomputer.local", "get_ntlm_user_hash");
+        $username = $ldapRequest->ntlm_prompt("testwebsite", "workgroup", "ie8tester", "testdomain.local", "mycomputer.local", "get_ntlm_user_hash");
         if (!$username) {
+            $logger = $this->container->get('logger');
+            $logger->info('NTLM auth failed');
             throw new AuthenticationException('The NTLM authentication failed');
         }
+        $logger->info('NTLM auth successful: ' . $username);
         return $username;
     }
 
     public function isRemoteAddressAuthorised($remoteAddress)
     {
         return in_array($remoteAddress, $this->trustedRemoteAddresses);
+    }
+
+    public function isLoginFormBeingSubmitted()
+    {
+        if (($this->container->get('request')->getMethod() == "POST") &&
+            (substr($this->container->get('request')->getPathInfo(), 0, 6) == '/login')) {
+            
+            return true;
+        }
+        return false;
     }
 
     /**

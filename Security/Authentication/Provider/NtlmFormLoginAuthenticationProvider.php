@@ -61,6 +61,9 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
 
     public function authenticate(TokenInterface $token)
     {
+        $logger = $this->container->get('logger');
+        $logger->info('Trying to authenticate NTLM FormLogin provider');
+
         $user = $this->container->get('user.entity');
         $user->setUsername($token->getUsername());
 
@@ -69,9 +72,13 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
 
         $ntlmToken = new NtlmProtocolUsernamePasswordToken($user, $token->getCredentials(), $token->getProviderKey());
 
+        //var_dump('999', $token->getUsername(), $token->getCredentials()); exit;
+
         try {
             $user = $this->userProvider->loadUserByUsername($ntlmToken);
             $this->checkAuthentication($user, $ntlmToken);
+
+            $logger->info('Trying to authenticate NTLM Protocol provider');
 
             return new NtlmProtocolUsernamePasswordToken($user, $ntlmToken->getCredentials(),
                 $ntlmToken->getProviderKey(), $user->getRoles());
@@ -88,6 +95,8 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
         $invalidPasswordMessage = 'The presented password is invalid.';
         $noPasswordMessage = 'The presented password cannot be empty.';
 
+        $logger = $this->container->get('logger');
+
         $currentUser = $token->getUser();
 
        // var_dump($user->getPassword());
@@ -96,16 +105,19 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
         if ($currentUser instanceof UserInterface) {
             //if ($currentUser->getPassword() !== $user->getDecryptedPassword($this->container->getParameter('secret'))) {
             if ($currentUser->getPassword() !== $user->getPassword()) {
+                $logger->info('Invalid password');
                 throw new BadCredentialsException($invalidPasswordMessage);
             }
         } else {
             if (!$presentedPassword = $token->getCredentials()) {
+                $logger->info('No password supplied');
                 throw new BadCredentialsException($noPasswordMessage);
             }
 
             $userProvider = $this->container->get('user.provider');
 
             if ($userProvider->decryptPassword($user->getPassword()) !== $presentedPassword) {
+                $logger->info('Invalid password');
                 throw new BadCredentialsException($invalidPasswordMessage);
             }
         }
