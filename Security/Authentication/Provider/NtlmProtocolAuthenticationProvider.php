@@ -98,6 +98,8 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
 
     public function checkNtlm()
     {
+        $logger = $this->container->get('logger');
+        
         $ldapRequest = $this->container->get('ntlm.request');
 
         $username = $ldapRequest->ntlm_prompt("testwebsite", "workgroup", "ie8tester", "testdomain.local", "mycomputer.local", "get_ntlm_user_hash");
