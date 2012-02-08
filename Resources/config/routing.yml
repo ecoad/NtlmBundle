@@ -1,9 +1,9 @@
-login:
+BrowserCreativeNtlmBundle_main_login:
     pattern:   /login
     defaults:  { _controller: BrowserCreativeNtlmBundle:Security:login }
 
-login_check:
+BrowserCreativeNtlmBundle_main_logincheck:
     pattern:   /login_check
 
-logout:
+BrowserCreativeNtlmBundle_main_logout:
     pattern:   /logout
