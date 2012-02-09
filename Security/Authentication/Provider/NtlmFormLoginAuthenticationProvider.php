@@ -67,12 +67,10 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
         $user = $this->container->get('user.entity');
         $user->setUsername($token->getUsername());
 
-        $userProvider = $this->container->get('user.provider');
-        $user->setPassword($userProvider->encryptPassword($token->getCredentials()));
+        $hubUserProvider = $this->container->get('user.provider');
+        $user->setPassword($hubUserProvider->encryptPassword($token->getCredentials()));
 
         $ntlmToken = new NtlmProtocolUsernamePasswordToken($user, $token->getCredentials(), $token->getProviderKey());
-
-        //var_dump('999', $token->getUsername(), $token->getCredentials()); exit;
 
         try {
             $user = $this->userProvider->loadUserByUsername($ntlmToken);
