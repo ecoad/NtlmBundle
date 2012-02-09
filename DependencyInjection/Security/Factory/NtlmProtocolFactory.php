@@ -16,7 +16,7 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
             ->setDefinition($providerId,
                 new DefinitionDecorator('ntlm.security.authentication.provider.ntlmprotocol'))
                 ->replaceArgument(1, new Reference($userProviderId))
-                ->replaceArgument(2, $config['trusted_remote_addresses']);
+                ->replaceArgument(2, $config['ntlm_addresses']);
 
         $listenerId = 'ntlm.security.authentication.listener.ntlmprotocol.' . $id;
         $container->setDefinition($listenerId,
@@ -57,7 +57,7 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
             ->children()
                 ->booleanNode('redirect_to_login_form_on_failure')->defaultValue(true)->end()
                 ->scalarNode('provider')->end()
-                ->arrayNode('trusted_remote_addresses')
+                ->arrayNode('ntlm_addresses')
                     ->useAttributeAsKey('key')
                     ->prototype('scalar')->end()
             ->end()
