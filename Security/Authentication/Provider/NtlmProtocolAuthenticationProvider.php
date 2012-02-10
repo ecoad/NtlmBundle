@@ -59,9 +59,9 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
         
         $logger->info('Trying to authenticate NTLM Protocol provider');
 
-        if (!$this->isRemoteAddressAuthorised($_SERVER['REMOTE_ADDR'])) {
-            throw new AuthenticationException('NTLM cannot authenticate against unauthorised IP addresses');
-        }
+        //if (!$this->isRemoteAddressAuthorised($_SERVER['REMOTE_ADDR'])) {
+        //    throw new AuthenticationException('NTLM cannot authenticate against unauthorised IP addresses');
+        //}
 
         if ($this->isLoginFormBeingSubmitted()) {
             $message = 'NTLM cannot be used in conjunction with form submits in login';
