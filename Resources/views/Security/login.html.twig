@@ -6,10 +6,11 @@
 		<div>{{ error.message }}</div>
 	{% endif %}
 
-	<div id="login">
+	<div id="modules">
+	<div id="login" class="module mod-form">
 		<h2>Login</h2>
-		<div class="inside">
 			<form class="o-form" action="{{ path('BrowserCreativeNtlmBundle_main_logincheck') }}" method="post">
+				<div class="inside">
 				<ul class="list cf">
 					<li class="item">
 						<label class="label" for="username">Username:</label>
@@ -23,6 +24,9 @@
 							<input class="field" type="password" id="password" name="_password">
 						</div>
 					</li>
+				</ul>
+				</div>
+				<div class="footer">
 
 				{#
 					If you want to control the URL the user is redirected to on success (more details below)
@@ -30,8 +34,9 @@
 				#}
 
 					<input class="button" type="submit" name="login" value="Login">
+				</div>
 			</form>
-		</div>
+	</div>
 	</div>
 
 {% endblock %}
