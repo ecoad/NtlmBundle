@@ -57,9 +57,10 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
         $logger = $this->container->get('logger');
 
         
-        $logger->info('Trying to authenticate NTLM Protocol provider');
+        $logger->info('Trying to authenticate NTLM Protocol provider: ' . $_SERVER['REMOTE_ADDR']);
 
         if (!$this->isRemoteAddressAuthorised($_SERVER['REMOTE_ADDR'])) {
+            $logger->info('Remote address is not authorised for NTLM: ' . $_SERVER['REMOTE_ADDR']);
             throw new AuthenticationException('NTLM cannot authenticate against unauthorised IP addresses');
         }
 
@@ -104,7 +105,6 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
 
         $username = $ldapRequest->ntlm_prompt("testwebsite", "workgroup", "ie8tester", "testdomain.local", "mycomputer.local", "get_ntlm_user_hash");
         if (!$username) {
-            $logger = $this->container->get('logger');
             $logger->info('NTLM auth failed');
             throw new AuthenticationException('The NTLM authentication failed');
         }
