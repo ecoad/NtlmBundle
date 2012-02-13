@@ -2,15 +2,16 @@
 
 {% block pageTitle %}Login{% endblock %}
 {% block content %}
-	{% if error %}
-		<div>{{ error.message }}</div>
-	{% endif %}
-
 	<div id="modules">
 	<div id="login" class="module mod-form">
 		<h2>Login</h2>
 			<form class="o-form" action="{{ path('BrowserCreativeNtlmBundle_main_logincheck') }}" method="post">
 				<div class="inside">
+				{% if error %}
+					<ul class="errors">
+						<li class="error">{{ error.message }}</li>
+					</ul>
+				{% endif %}
 				<ul class="list cf">
 					<li class="item">
 						<label class="label" for="username">Username:</label>
@@ -40,3 +41,4 @@
 	</div>
 
 {% endblock %}
+This value should not be blank
