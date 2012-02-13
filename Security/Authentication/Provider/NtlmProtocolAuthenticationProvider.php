@@ -55,12 +55,12 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
     public function authenticate(TokenInterface $token)
     {
         $logger = $this->container->get('logger');
-
+        $remoteIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
         
-        $logger->info('Trying to authenticate NTLM Protocol provider: ' . $_SERVER['REMOTE_ADDR']);
+        $logger->info('Trying to authenticate NTLM Protocol provider: ' . $remoteIp);
 
-        if (!$this->isRemoteAddressAuthorised($_SERVER['REMOTE_ADDR'])) {
-            $logger->info('Remote address is not authorised for NTLM: ' . $_SERVER['REMOTE_ADDR']);
+        if (!$this->isRemoteAddressAuthorised($remoteIp)) {
+            $logger->info('Remote address is not authorised for NTLM: ' . $remoteIp);
             throw new AuthenticationException('NTLM cannot authenticate against unauthorised IP addresses');
         }
 
