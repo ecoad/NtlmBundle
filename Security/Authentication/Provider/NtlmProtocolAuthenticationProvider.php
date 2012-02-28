@@ -55,6 +55,7 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
     public function authenticate(TokenInterface $token)
     {
         $logger = $this->container->get('logger');
+
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $remoteIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
@@ -70,6 +71,12 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
 
         if ($this->isLoginFormBeingSubmitted()) {
             $message = 'NTLM cannot be used in conjunction with form submits in login';
+            $logger->info($message);
+            throw new AuthenticationException($message);
+        }
+
+        if (!$this->isUserAgentDesktopBrowser()) {
+            $message = 'NTLM can only be used on desktop computers';
             $logger->info($message);
             throw new AuthenticationException($message);
         }
@@ -90,7 +97,7 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
                  */
                 $user = $this->userProvider->loadUserByUsername($token);
 
-                $logger->info('User loaded: ' . $username);
+                $logger->info('NTLM: user loaded: ' . $username);
 
                 return new NtlmProtocolToken($user);
             } catch (UsernameNotFoundException $e) {
@@ -128,6 +135,27 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
             
             return true;
         }
+        return false;
+    }
+
+    public function isUserAgentDesktopBrowser()
+    {
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
+            return false;
+        }
+
+        //Look for mobiles
+        preg_match($this->container->getParameter('browser_detection.mobile'), $_SERVER['HTTP_USER_AGENT'], $matches);
+        if (count($matches) !== 0) {
+            return false;
+        }
+
+        //Look for desktops
+        preg_match($this->container->getParameter('browser_detection.desktop'), $_SERVER['HTTP_USER_AGENT'], $matches);
+        if (count($matches) !== 0) {
+            return true;
+        }
+
         return false;
     }
 
