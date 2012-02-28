@@ -60,7 +60,7 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
         } else {
             $remoteIp = $_SERVER['REMOTE_ADDR'];
         }
-        
+
         $logger->info('Trying to authenticate NTLM Protocol provider: ' . $remoteIp);
 
         if (!$this->isRemoteAddressAuthorised($remoteIp)) {

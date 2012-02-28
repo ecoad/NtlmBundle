@@ -76,7 +76,7 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
             $user = $this->userProvider->loadUserByUsername($ntlmToken);
             $this->checkAuthentication($user, $ntlmToken);
 
-            $logger->info('Trying to authenticate NTLM Protocol provider');
+            $logger->info('Authenticated by FormLogin');
 
             return new NtlmProtocolUsernamePasswordToken($user, $ntlmToken->getCredentials(),
                 $ntlmToken->getProviderKey(), $user->getRoles());
@@ -97,11 +97,7 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
 
         $currentUser = $token->getUser();
 
-       // var_dump($user->getPassword());
-       // var_dump($currentUser->getPassword()); exit;
-
         if ($currentUser instanceof UserInterface) {
-            //if ($currentUser->getPassword() !== $user->getDecryptedPassword($this->container->getParameter('secret'))) {
             if ($currentUser->getPassword() !== $user->getPassword()) {
                 $logger->info('Invalid password');
                 throw new BadCredentialsException($invalidPasswordMessage);
@@ -115,8 +111,8 @@ class NtlmFormLoginAuthenticationProvider implements AuthenticationProviderInter
             $userProvider = $this->container->get('user.provider');
 
             if ($userProvider->decryptPassword($user->getPassword()) !== $presentedPassword) {
-                $logger->info('Invalid password');
                 throw new BadCredentialsException($invalidPasswordMessage);
+                $logger->info('Invalid password');
             }
         }
     }

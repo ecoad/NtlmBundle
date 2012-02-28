@@ -35,5 +35,9 @@
                  class="BrowserCreative\NtlmBundle\Security\Http\Logout\NtlmLogoutHandler"
                  public="false">
         </service>
+        <service id="ntlm.securityController"
+                 class="BrowserCreative\NtlmBundle\Controller\SecurityController"
+                 public="true">
+        </service>
     </services>
 </container>
