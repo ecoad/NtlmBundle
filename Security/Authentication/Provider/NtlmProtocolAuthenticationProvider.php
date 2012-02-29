@@ -97,6 +97,8 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
                  */
                 $user = $this->userProvider->loadUserByUsername($token);
 
+                $this->container->get('session')->set('ntlm-user', true);
+
                 $logger->info('NTLM: user loaded: ' . $username);
 
                 return new NtlmProtocolToken($user);
