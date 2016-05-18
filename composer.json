@@ -1,6 +1,6 @@
 {
   "name": "ecoad/ntlmbundle",
-  "description": "NTLM authentication provider for Symfony2, with form login failover"
+  "description": "NTLM authentication provider for Symfony2, with form login failover",
   "autoload": {
     "psr-4": {
       "BrowserCreative\\NtlmBundle\\": ""
