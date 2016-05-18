@@ -1,0 +1,4 @@
+{
+  "name": "ecoad/ntlmbundle",
+  "description": "NTLM authentication provider for Symfony2, with form login failover"
+}
