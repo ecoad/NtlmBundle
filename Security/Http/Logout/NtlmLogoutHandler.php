@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contains the NtlmLogoutHandler class, part of the Symfony2 Wordpress bundle
+ * Contains the NtlmLogoutHandler class
  *
  * @package    BrowserCreative\NtlmBundle
  * @subpackage Security\Http\Logout
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Handles logging out of Wordpress when the user logs out of Symfony
+ * Handles logging out of SSO-connected apps when the user logs out of Symfony
  *
  * @package    BrowserCreative\NtlmBundle
  * @subpackage Security\Http\Logout

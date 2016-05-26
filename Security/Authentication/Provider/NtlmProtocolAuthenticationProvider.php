@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contains the NtlmProtocolAuthenticationProvider class, part of the Symfony2 Wordpress Bundle
+ * Contains the NtlmProtocolAuthenticationProvider class
  *
  * @author     Miquel Rodríguez Telep / Michael Rodríguez-Torrent <mike@themikecam.com>
  * @author     Ka Yue Yeung

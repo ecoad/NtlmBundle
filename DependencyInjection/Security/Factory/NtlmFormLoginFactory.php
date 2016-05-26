@@ -17,7 +17,7 @@ class NtlmFormLoginFactory extends FormLoginFactory
             ->replaceArgument(0, $config['remember_me_parameter'])
             ->replaceArgument(2, new Reference($userProviderId));
 
-        # If the application does logouts, add our handler to log the user out of Wordpress, too
+        # If the application does logout, add our handler to log the user out of connected apps, too
         if ($container->hasDefinition('security.logout_listener.'.$id)) {
             $logoutListener = $container->getDefinition('security.logout_listener.'.$id);
             $addHandlerArguments = array(new Reference('ntlm.security.http.logout.' . $id));

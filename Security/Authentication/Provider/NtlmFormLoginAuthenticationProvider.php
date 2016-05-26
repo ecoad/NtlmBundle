@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contains the NtlmFormLoginAuthenticationProvider class, part of the Symfony2 Wordpress Bundle
+ * Contains the NtlmFormLoginAuthenticationProvider class
  *
  * @author     Miquel Rodríguez Telep / Michael Rodríguez-Torrent <mike@themikecam.com>
  * @package    BrowserCreative\NtlmBundle
@@ -23,8 +23,6 @@ use BrowserCreative\NtlmBundle\Security\User\User;
 use BrowserCreative\NtlmBundle\Security\Authentication\Token\NtlmProtocolUsernamePasswordToken;
 
 /**
- * NtlmFormLoginAuthenticationProvider will authenticate the user with Wordpress
- *
  * @package    BrowserCreative\NtlmBundle
  * @subpackage Security\Authentication\Provider
  * @author     Miquel Rodríguez Telep / Michael Rodríguez-Torrent <mike@themikecam.com>
