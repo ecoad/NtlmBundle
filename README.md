@@ -62,6 +62,16 @@ Installation
             
             ...
 
+4. Optional: set the following 2 parameters:
+
+        parameters:
+            browser_detection.mobile: 'regexp...'
+            browser_detection.desktop 'regexp...'
+
+When set, they will be matched against the user-agent string from the browser:
+- any mobile browser will not use NTLM auth (i.e. a blacklist)
+- only desktop browsers will use NTLM auth (i.e. a whitelist; not setting it means 'all except the mobile ones')
+
 Notes
 =====
 * The two authentication providers (NtlmProtocolAuthenticationProvider, NtlmFormLoginAuthenticationProvider) pass 
