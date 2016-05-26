@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contains the NtlmProtocolAuthenticationProvider class, part of the Symfony2 Wordpress Bundle
+ * Contains the NtlmProtocolAuthenticationProvider class
  *
  * @author     Miquel Rodríguez Telep / Michael Rodríguez-Torrent <mike@themikecam.com>
  * @author     Ka Yue Yeung
@@ -146,15 +146,22 @@ class NtlmProtocolAuthenticationProvider implements AuthenticationProviderInterf
             return false;
         }
 
-        //Look for mobiles
+        // Look for mobiles
+        if ($this->container->hasParameter('browser_detection.mobile')) {
         preg_match($this->container->getParameter('browser_detection.mobile'), $_SERVER['HTTP_USER_AGENT'], $matches);
         if (count($matches) !== 0) {
             return false;
         }
+        }
 
-        //Look for desktops
-        preg_match($this->container->getParameter('browser_detection.desktop'), $_SERVER['HTTP_USER_AGENT'], $matches);
-        if (count($matches) !== 0) {
+        // Look for desktops
+        if ($this->container->hasParameter('browser_detection.desktop')) {
+            preg_match($this->container->getParameter('browser_detection.desktop'), $_SERVER['HTTP_USER_AGENT'], $matches);
+            if (count($matches) === 0) {
+                return false;
+            }
+        }
+
             return true;
         }
 

@@ -23,7 +23,7 @@ class NtlmProtocolFactory implements SecurityFactoryInterface
             new DefinitionDecorator('ntlm.security.authentication.listener.ntlmprotocol'))
             ->addArgument($config['redirect_to_login_form_on_failure']);
 
-        # If the application does logouts, add our handler to log the user out of Wordpress, too
+        # If the application does logout, add our handler to allow to log the user out of other apps, too
         if ($container->hasDefinition('security.logout_listener.'.$id)) {
             $logoutListener = $container->getDefinition('security.logout_listener.'.$id);
             $addHandlerArguments = array(new Reference('ntlm.security.http.logout.' . $id));

@@ -86,9 +86,6 @@ class NtlmProtocolListener implements ListenerInterface
     }
 
     /**
-     * Authenticates the Wordpress cookie in the request. Depending upon $redirectToFormLogin, 
-     * either silently returns or redirects to Wordpress login on failure.
-     *
      * @param GetResponseEvent $event
      * @return null
      */
