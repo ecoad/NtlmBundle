@@ -11,18 +11,12 @@ Requirements
 
 * Symfony 2.0.x
 
+* A way to retrieve the password of a user given his/her username (eg. a Samba user db installed on the webserver)
+
 Installation
 ============
 
-1. Register the namespace `BrowserCreative` to your project's autoloader bootstrap script:
-
-        // app/autoload.php
-
-        $loader->registerNamespaces(array(
-              // ...
-              'BrowserCreative'    => __DIR__.'/../vendor/bundles',
-              // ...
-        ));
+1. Use Composer to add the bundle to your application
 
 2. Add this bundle to your application's kernel:
 
@@ -77,5 +71,3 @@ Notes
 * The two authentication providers (NtlmProtocolAuthenticationProvider, NtlmFormLoginAuthenticationProvider) pass 
 tokens to the user provider instead of the username. Feel free to change this back, it's just that our User Providers 
 require the tokens because they rely on the password to access the database (LDAP)
-
-
