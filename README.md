@@ -53,6 +53,7 @@ Installation
                     ntlm_protocol:
                         provider: chain_provider
                         redirect_to_login_form_on_failure: true
+                        ntlm_addresses: [ ...list of ip addresses authorized to do NTLM auth... ]
                     ntlm_form_login:
                         provider: chain_provider
                         remember_me_parameter: _remember_me
